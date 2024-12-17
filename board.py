@@ -7,7 +7,7 @@ class Board:
         """Construct objects of type Board, with the given width and height."""
         self.width = width
         self.height = height
-        self.data = [[' ']*width for row in range(height)]
+        self.clear()
 
     def __repr__(self):
         """This method returns a string representation
@@ -32,15 +32,52 @@ class Board:
             if self.data[row][col] == ' ':
                 self.data[row][col] = ox
                 return
+            
+    def add_move_while(self, col, ox):
+        row = self.height - 1
+        while row >= 0 and self.data[row][col] != ' ':
+            row -= 1
+        if self.data[row][col] == ' ': # strictly this check is not needed because it's guaranteed there's at least one free spot in this column
+            self.data[row][col] = ox
 
+    def clear(self):
+        self.data = [[' '] * self.width for _ in range(self.height)]
 
-b = Board(7, 6)
+    def set_board(self, move_string):
+        """Accepts a string of columns and places
+        alternating checkers in those columns,
+        starting with 'X'.
+        For example, call b.set_board('012345')
+        to see 'X's and 'O's alternate on the
+        bottom row, or b.set_board('000000') to
+        see them alternate in the left column.
+        move_string must be a string of one-digit integers.
+        """
+        next_checker = 'X'   # we starten door een 'X' te spelen
+        for col_char in move_string:
+            col = int(col_char)
+            if 0 <= col <= self.width:
+                self.add_move(col, next_checker)
+            if next_checker == 'X':
+                next_checker = 'O'
+            else:
+                next_checker = 'X'
+
+    def allows_move(self, col):
+        return self.data[0][col] == ' '
+
+    def is_full(self):
+        for col in range(self.width):
+            if self.allows_move(col):
+                return False
+        return True
+    
+
+b = Board(2, 2)
+print(b.is_full())
 b.add_move(0, 'X')
 b.add_move(0, 'O')
-b.add_move(0, 'X')
-b.add_move(0, 'X')
-b.add_move(3, 'O')
-b.add_move(4, 'O')  # Valsspelen door O opnieuw te laten zetten!
-b.add_move(5, 'O')
-b.add_move(6, 'O')
+b.add_move(1, 'X')
+b.add_move(1, 'O')
 print(b)
+print(b.is_full())
