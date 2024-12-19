@@ -72,12 +72,20 @@ class Board:
                 return False
         return True
     
+    def del_move(self, col):
+        row = 0
+        while self.data[row][col] == ' ' and row < self.height - 1:
+            row += 1
+        if row < self.height:
+            self.data[row][col] = ' '
+    
 
 b = Board(2, 2)
 print(b.is_full())
-b.add_move(0, 'X')
-b.add_move(0, 'O')
-b.add_move(1, 'X')
-b.add_move(1, 'O')
+b.set_board('0011')
 print(b)
 print(b.is_full())
+b.del_move(0)
+b.del_move(0)
+b.del_move(0)
+print(b)
